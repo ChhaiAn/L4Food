@@ -1,0 +1,61 @@
+#wrapper{
+    min-height: calc(100vh - 128px);
+}
+
+
+.my-aside {
+    background-color: rgb(228, 228, 228);
+    padding:0;
+}
+
+.my-right-content{
+   
+    padding:0;
+    background-color: #f3f3f3;
+}
+.my-header {
+    background-color: red;
+    color: white;
+    font-weight: 400;
+    font-size: 1.5em;
+    padding: 10px 0;
+    
+    
+}
+.list-group-item.active {
+    border:none;
+}
+#footer {
+    background-color: #343A40;
+    color: white;
+    text-align: center;
+    height: 56px;
+    padding-top: 1rem;
+}
+
+.user-counter-wrapper {
+    min-width: 100px;
+    height: 100px;
+    background-color: #b9b4b4;
+}
+.user-counter-wrapper h3{
+    color: white;
+    font-weight: 400;
+
+}
+.user-table{
+    width: 100%;
+    text-align: center;
+    border: 1px solid black;
+    margin-top: 1rem;
+}
+.user-table th,tr,td{
+    border: 1px solid black;
+}
+.user-table tr:nth-child(odd) {
+    background-color: rgb(221, 217, 217);
+}
+.user-table th {
+    background-color: #117A8B;
+    color: white;
+}

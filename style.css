@@ -1,0 +1,276 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+}
+
+
+
+.background {
+    background-image: url("images/background/main.jpg");
+    background-size: cover;
+    min-height: calc(100vh - 177.5px);
+
+
+}
+.darkOverlay{
+    background: rgba(41, 40, 40, 0.5);
+    position: absolute;
+    min-height: calc(100vh - 177.5px);
+    left:0;
+    width: 100%;
+
+}
+
+nav.navbar {
+    padding: 0;
+}
+
+div.container-fluid {
+    padding:0;
+}
+.myImage {
+    height: 200px;
+    width: 100%;
+    background-color: blue;
+
+}
+.forgetPassword-background {
+    background-image: url("images/background/forgetPassword.png");
+    background-size: cover;
+    height: calc(100vh - 107.5px);
+}
+
+
+.myFooter {
+  height: 70px;
+}
+.myFooter p{
+    position: relative;
+    top: 35%;
+}
+.log-in-form {
+    width:51%;
+}
+.myForm{
+    background: #F5F5F5;
+    margin-top: 1em;
+
+
+}
+    .my-form-line{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-column-gap: 1em;
+
+    }
+    .myForm h1,a {
+        color:#BC847C;
+    }
+
+
+    .myForm a:hover {
+        color:#A64D1E;
+        text-decoration: none;
+    }
+
+    .myDob {
+        display: inline-block;
+        width: auto;
+    }
+    span.error-message {
+        color: #a94442;
+        background-color: #f2dede;
+        border-color: #ebccd1;
+
+    }
+    .btn-my-search {
+        border: 1px solid #A64D1E;
+        background: none;
+        color: #A64D1E;
+    }
+    .btn-my-search:hover {
+        background: #A64D1E;
+        color: white;
+    }
+    .forgetPassword-form {
+        width: 400px;
+        margin: 5% auto;
+    }
+    .forgetSearchButton{
+        margin-left: 50px;
+    }
+    .forgetPasswordResult{
+        
+        background-color: #F5F5F5;
+        width: 500px;
+        height: 275px;
+        position: absolute;
+        top: 23%;
+        left: 30%;
+        display: none;
+        
+        
+    }
+    
+.btn-myOutline-logIn {
+    border: 1px solid #A64D1E;
+    background: none;
+    color: #A64D1E;
+    width: 50%;
+}
+.btn-myOutline-logIn:hover {
+    background: #A64D1E;
+    color: white;
+}
+.btn-myOutline-logOut {
+    border: 1px solid red;
+    background: none;
+    color: #A19494;
+}
+.btn-myOutline-logOut:hover {
+    background: #FF0E0E;
+    color: white;
+}
+
+.btn-modal-close{
+    background:none;
+    border: 1px solid #BC847C;
+}
+.btn-modal-close:hover {
+    background: #BC847C;
+    border: 1px solid #BC847C;
+}
+
+.profile-background {
+    background-color: grey;
+    height: 15rem;
+}
+
+.forgetPasswordUser-wrapper{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px,1fr));
+    grid-gap: 5px;
+}
+
+
+.forgetPasswordUserPic{
+    width: 100px;
+    height: 100px;
+    margin-top: 2%;
+    border-radius: 50%;
+    border: 1px solid #A19494;
+}
+.btn-search {
+    height: 50%;
+    margin-top: 25%;
+}
+.btn-my-search{
+    margin-top: 5px;
+}
+#button-me {
+    margin-bottom: 3%;
+
+}
+.profile-image-wrapper {
+   
+    position: relative;
+    top: -3rem;
+    height: 250px;
+    width: 250px;
+    margin-bottom: 5rem;
+
+}
+    .profile-image{
+        width: 250px;
+        height: 250px;
+        border-radius: 50%;
+    }
+.pic-suggestion-box {
+
+    height: 300px;
+    background: red;
+    padding-top: 10px;
+
+
+
+}
+
+
+.my-modal-header {
+    background-color: #CCB474;
+    color: white;
+}
+
+.my-modal-footer {
+    background-color: #CCB474;
+    color: white;
+}
+.btn-my-modal-submit{
+    background-color: #A64D1E;
+    color: white;
+}
+
+.btn-upload-picture {
+    background-color: #A64D1E;
+    color: white;
+    position: absolute;
+    top:50%;
+    left: 20%;
+    display: none;
+
+}
+
+.btn-upload-picture:hover {
+    background-color:#CCB474;
+
+    
+}
+
+
+
+
+
+
+
+.myBtn {
+    position: absolute;
+    top:40%;
+    left: 40%;
+    height: 50px;
+    width: 50px;
+    display: none;
+}
+.col-lg {
+    height: 400px;
+    background: black;
+    padding: 10px 5px;
+}
+.col-lg:first-child {
+    padding-left: 10px;
+}
+.col-lg:last-child {
+    padding-right: 10px;
+}
+.friend-suggestion h1 {
+    margin-top: 20%;
+}
+.resetPassword {
+    margin: 10rem auto;
+    width: 300px;
+    
+
+}
+.resetPassword h1 {
+    font-weight: 300;
+    font-size: 3em;
+}
+
+.my-modal-tab{
+   margin-left: 1em;
+
+}
+.my-modal-tab:visited{
+    border-top: 1px solid black;
+
+}
