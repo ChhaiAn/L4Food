@@ -1,25 +1,25 @@
 <?php session_start(); ob_start();?>
 <?php
 $hashedPassword = '';
-$flag = true;               
+$flag = true;
 $accNotFound = false;
 $emailExist = false;
 $passNotMatch = false;
 $usernameExist = false;
 $accountFound = false;
 $isMe = false;
-
+$userLevel;
    $connection = mysqli_connect("localhost", 'root' , 'root' , 'project1');
 
     if ($connection) {
-       
+
     }
     else {
         die ("connection failed");
     }
 
-    
-    
+
+
 
 
     /* CLEAN UP THE INPUT */
@@ -34,13 +34,20 @@ if(isset($_POST['login'])) {
     $passLogin = mysqli_escape_string($connection,$passLogin);
 
 
-    $query = "SELECT * FROM `users` WHERE `email` = '".$emailLogin."'";
+    $query = "SELECT * FROM `USER_REGISTRATION` WHERE `email` = '".$emailLogin."'";
     $result = mysqli_query($connection, $query);
-   
+
     while ($row = mysqli_fetch_array($result)) {
        $db_email = $row['email'];
        $db_password= $row['password'];
        $db_username= $row['username'];
+       $db_userlevel = $row['user_level'];
+       if ($db_userlevel == 0) {
+         $userLevel = 1;
+       }
+       else {
+         $userLevel = 5;
+       }
 
     }
 
@@ -52,15 +59,21 @@ if(isset($_POST['login'])) {
         $accNotFound = true;
     }
     else {
-       
-        $query = "SELECT `username` FROM `users` WHERE `email` = '".$emailLogin."'";
+
+        $query = "SELECT `username` FROM `USERS_REGISTRATION` WHERE `email` = '".$emailLogin."'";
         $result = mysqli_query($connection, $query);
         $a = mysqli_fetch_assoc($result);
         $_SESSION['username'] = $a['username'];
+        if ($userLevel == 1){
         header("Location: profile.php");
         exit();
+        }
+        else {
+          header("Location: adminIndex.php");
+          exit();
+        }
     }
- 
+
 }
 /******************************************************************************************/
 
@@ -78,6 +91,10 @@ if(isset($_POST['submit'])) {
     $birthDate = $_POST['day'];
     $birthMonth = $_POST['month'];
     $birthYear = $_POST['year'];
+    $dob = $birthYear."-".$birthMonth."-".$birthDate;
+    $time = strtotime($dob);
+    $newformat = date('Y-m-d',$time);
+    $date_of_birth = $newformat;
     $gender = $_POST['gender'];
     $_SESSION['gender'] = $gender;
    $secuQuestion = $_POST['secu-ques'];
@@ -87,31 +104,31 @@ if(isset($_POST['submit'])) {
    $password = mysqli_escape_string($connection,$password);
    $conpass = mysqli_escape_string($connection,$conpass);
    $email = mysqli_escape_string($connection,$email);
-   
-  
 
-    $query = "SELECT `email` FROM `users` WHERE `email` = '".$email."'";
+
+
+    $query = "SELECT `email` FROM `USER_REGISTRATION` WHERE `email` = '".$email."'";
     $result = mysqli_query($connection, $query);
-   
+
     $b = mysqli_num_rows($result);
-    
+
     if ($b > 0) {
         $emailExist = true ;
         $flag = false;
-    
+
     }
 
-    $query = "SELECT `username` FROM `users` WHERE `username` = '".$username."'";
+    $query = "SELECT `username` FROM `USER_REGISTRATION` WHERE `username` = '".$username."'";
     $result = mysqli_query($connection, $query);
-    
+
     $b = mysqli_num_rows($result);
-    
+
     if ($b > 0) {
         $usernameExist = true;
 
         $flag = false;
     }
- 
+
     if($password !== $conpass){
         $passNotMatch = true;
         $flag = false;
@@ -123,8 +140,8 @@ if(isset($_POST['submit'])) {
     }
 
     if ($flag) {
-       
-        $query = "INSERT INTO users(`username`,`password`,`email`,`gender`,`secuQuestion`,`secuAnswer`) VALUES ('$username','$hashedPassword','$email','$gender','$secuQuestion','$secuAnswer')";
+
+        $query = "INSERT INTO USER_REGISTRATION(`username`,`password`,`email`,`gender`,`secure_question`,`secure_answer`,`date_of_birth`) VALUES ('$username','$hashedPassword','$email','$gender','$secuQuestion','$secuAnswer','$date_of_birth')";
         $result = mysqli_query($connection, $query);
 
         if($result) {
@@ -138,19 +155,19 @@ if(isset($_POST['submit'])) {
         $body = $body. "echo <p> Your password is ".$password ;
         mail($email, 'Registration Confirmation',
         $body, 'From: lee.supermonkey@gmail.com');
-        
 
-        $query = "SELECT `username` FROM `users` WHERE `email` = '".$email."'";
+
+        $query = "SELECT `username` FROM `USER_REGISTRATION` WHERE `email` = '".$email."'";
         $result = mysqli_query($connection, $query);
         $a = mysqli_fetch_assoc($result);
 
-      
+
 
 
         $_SESSION['username'] = $a['username'];
 
-        header("Location: profile.php");
-        exit();
+      //  header("Location: profile.php");
+      //  exit();
 
 
         /*KILL QUERY*/
@@ -161,8 +178,8 @@ if(isset($_POST['submit'])) {
     else {
         echo "failed";
     }
-    
-   
+
+
 }
 /******************************************************************************************/
 
@@ -212,7 +229,7 @@ if(isset($_POST['isMe'])){
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>L4Food</title>
   <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
-    crossorigin="anonymous"></script>  
+    crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
@@ -231,9 +248,9 @@ if(isset($_POST['isMe'])){
         </button>
 
         <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-       
+
           <form method="post" class="my-form-line ml-auto" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-           
+
                   <input class="form-control px-3 my-1" name="email-logIn" type="email" placeholder="Email" size="40" required>
                   <input class="form-control px-3 my-1" name="pass-logIn" type="password" placeholder="Password" size="40" required>
                 <div>
@@ -245,21 +262,21 @@ if(isset($_POST['isMe'])){
                 <div class="text-right">
                   <a  href="#" data-toggle="modal" data-target="#forgotPassModal">forgot password?</a>
                   <button class="btn btn-myOutline-logIn ml-auto my-1 " name="login" type="submit">Log In</button>
-                  
+
                 </div>
           </form>
         </div>
       </div>
       </nav>
-   
-    
+
+
 
 <!-- Modal -->
 <div class="modal fade" id="forgotPassModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      
-    
+
+
     <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Find Your Account</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -269,7 +286,7 @@ if(isset($_POST['isMe'])){
 
 
     <div class="modal-body text-center">
-       
+
         <p>What's your email?</p>
         <form class="form-group mt-2 text-right" action="" method="post">
             <input id="forgetEmailInput" class="form-control" type="email" name="forgetEmail" required>
@@ -277,18 +294,18 @@ if(isset($_POST['isMe'])){
         </form>
 
          <div class="forgetPasswordUser-wrapper">
-            
+
          <div class="forgetPasswordUser" id="1">
-                
+
         </div>
-            
-                
+
+
         </div><!--forgetPasswordUser wrapper -->
-        
+
     </div><!--modal body-->
 
     <div class="modal-footer">
-        
+
     </div><!--modal footer-->
     </div>
   </div>
@@ -299,8 +316,8 @@ if(isset($_POST['isMe'])){
 <div class="modal fade" id="secondModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      
-    
+
+
     <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Not So Fast!</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -310,8 +327,8 @@ if(isset($_POST['isMe'])){
 
 
     <div class="modal-body">
-         
-         
+
+
 
         <p id="secuQuestion"></p>
         <form class="form-group mt-2 text-right" action="" method="post">
@@ -319,12 +336,12 @@ if(isset($_POST['isMe'])){
             <button id="validate" type="" name="forgotPassword" class="btn btn-my-search">Validate</button>
         </form>
 
-        
- 
+
+
     </div><!--modal body-->
 
     <div class="modal-footer">
-        
+
     </div><!--modal footer-->
     </div>
   </div>
@@ -581,7 +598,7 @@ if(isset($_POST['isMe'])){
        </div>
       </div><!--overlay-->
     </div>
-    
+
 
   <footer>
     <div class="text-center myFooter">
@@ -590,7 +607,7 @@ if(isset($_POST['isMe'])){
   </footer>
 <script>
     $(document).ready(function () {
-   
+
         var secuAnswer = '';
         $('#forgetSearch').click(function (e) {
             e.preventDefault();
@@ -598,12 +615,12 @@ if(isset($_POST['isMe'])){
             if (search === "") {
                 $('#1').html("<p class='alert alert-warning'>Please Enter Your Email Address!</p>");
             } else {
-        
+
         var user = '';
         var email = '';
         var pictureName='';
         var secuQuestion = '';
-        
+
         var response='';
             $.ajax({
                 datatype: 'JSON',
@@ -625,15 +642,15 @@ if(isset($_POST['isMe'])){
                             message += "<p class='flex-item '>"+user+"</p>";
                             message +=  "<p class='flex-item'>"+email+"</p>";
                             message +=  "<button class='btn btn-primary text-center' data-toggle='modal' data-target='#secondModal' name='itMe' id='itMe'>It's me!</button>";
-   
-                            
-                         $('#1').html(message);   
+
+
+                         $('#1').html(message);
                          $("#secuQuestion").html(secuQuestion);
                     }
                     catch(e) {
 
                             $('#1').html("<p class='alert alert-danger'>Account Not Found!</p>");
-                        
+
                     }//catch
                 }//success function
             }); //AJAXy
@@ -643,12 +660,12 @@ if(isset($_POST['isMe'])){
     $('#validate').click(function (e) {
         e.preventDefault();
         var answer = $('#secuAnswer').val().toLowerCase();
-     
+
         if (answer === secuAnswer) {
             $.post('resetPassword.php' , {answer: answer}, function(data) {
                 window.location.href = "resetPassword.php";
             });
-            
+
         } else {
             alert("Your answer is not correct!");
         }
