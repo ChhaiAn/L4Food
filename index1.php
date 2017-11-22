@@ -60,16 +60,21 @@ if(isset($_POST['login'])) {
     }
     else {
 
-        $query = "SELECT `username` FROM `USERS_REGISTRATION` WHERE `email` = '".$emailLogin."'";
+        $query = "SELECT `username` FROM `USER_REGISTRATION` WHERE `email` = '".$emailLogin."'";
         $result = mysqli_query($connection, $query);
+        if(!$result){
+          echo "fail". mysqli_error($connection);
+        }
         $a = mysqli_fetch_assoc($result);
         $_SESSION['username'] = $a['username'];
         if ($userLevel == 1){
-        header("Location: profile.php");
+          header("Location: profile.php");
+
         exit();
         }
         else {
           header("Location: adminIndex.php");
+        
           exit();
         }
     }
