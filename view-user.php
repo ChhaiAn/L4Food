@@ -37,12 +37,32 @@ include("cdb.php");
                                             <th>Level</th>
                                             <th>Active</th>
                                         </tr>
-                                        <tr>
-                                            <td><span id="lastName">An, </span><span id="firstName">Chhai</span></td>
-                                            <td><span id="email">Chhaily_an@yahoo.com</span></td>
-                                            <td>5</td>
-                                            <td>Y</td>
-                                        </tr>
+
+                                        <?php
+
+                                         $query = "SELECT * FROM USER_REGISTRATION ORDER BY username";
+                                         $result = mysqli_query($connection,$query);
+                                         if(!$result){
+                                           echo mysqli_error($connection);
+                                         }
+                                        while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
+                                          echo '<tr>
+		                                            <td><a href="user_edit_profile.php?user_id=' . $row['user_id'] . '">'. $row['username'] .'</a></td>
+		                                             <td>' . $row['email'] . '</td>
+		                                             <td>' . $row['user_level'] . '</td>
+                                                 <td>' . $row['active'] . '</td>
+	                                                </tr>';
+                                                  }
+
+
+
+
+
+
+
+
+
+                                        ?>
 
 
                                     </table>

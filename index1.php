@@ -74,7 +74,7 @@ if(isset($_POST['login'])) {
         }
         else {
           header("Location: adminIndex.php");
-        
+
           exit();
         }
     }
@@ -146,7 +146,7 @@ if(isset($_POST['submit'])) {
 
     if ($flag) {
 
-        $query = "INSERT INTO USER_REGISTRATION(`username`,`password`,`email`,`gender`,`secure_question`,`secure_answer`,`date_of_birth`) VALUES ('$username','$hashedPassword','$email','$gender','$secuQuestion','$secuAnswer','$date_of_birth')";
+        $query = "INSERT INTO USER_REGISTRATION(`username`,`password`,`email`,`gender`,`secure_question`,`secure_answer`,`date_of_birth`,`user_level`,`active`) VALUES ('$username','$hashedPassword','$email','$gender','$secuQuestion','$secuAnswer','$date_of_birth',0,'Y')";
         $result = mysqli_query($connection, $query);
 
         if($result) {

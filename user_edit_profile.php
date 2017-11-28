@@ -1,5 +1,54 @@
 <?php
+session_start(); ob_start();
 include("adminHeader.php");
+include("cdb.php");
+$_GET['user_id'];
+
+$query = "SELECT * FROM USER_REGISTRATION WHERE user_id = '".$_GET['user_id']."'";
+$result = mysqli_query($connection,$query);
+if (!$result){
+  echo mysqli_error($connection);
+}
+$row = mysqli_fetch_assoc($result);
+
+$username = $row['username'];
+$email = $row['email'];
+$userlevel = $row['user_level'];
+$active = $row['active'];
+$userid = $row['user_id'];
+
+//UPDATE THE DATABASE
+
+if(isset($_POST['submit'])) {
+  $update_username = $_POST['userName'];
+  $update_email = $_POST['userEmail'];
+  $update_userlevel = $_POST['userLevel'];
+  $update_active = $_POST['userActive'];
+  $update_bio = $_POST['userBio'];
+
+  $query = "UPDATE USER_REGISTRATION SET
+            username = '$update_username',
+            email = '$update_email',
+            user_level='$update_userlevel',
+            active='$update_active',
+            about_me='$update_bio'
+            WHERE user_id ='$userid'";
+
+  $result = mysqli_query($connection,$query);
+  if(!$result) {
+    echo mysqli_error($connection);
+  }
+
+  if ($update_userlevel == 5){
+    header("Location: user_edit_profile.php?user_id=$userid");
+    exit();
+  }
+  else {
+    header("Location: index1.php");
+    exit();
+  }
+}
+
 
 
 
@@ -12,7 +61,7 @@ include("adminHeader.php");
               <div class="col-sm-2 my-aside">
                     <div class="list-group ">
                             <a href="#" class="list-group-item list-group-item-action active bg-info text-center">
-                              Welcome, <span>Chhai!</span>
+                              Welcome, <?php echo $username; ?>
                             </a>
 
 
@@ -45,16 +94,14 @@ include("adminHeader.php");
                               <div class="container">
                                 <div class="row">
                                   <div class="col-sm-4">
-                                    <label for="userFirstName">First Name</label><br>
-                                    <input class="form-control" id="userFirstName" type="text" name="userFirstName" placeholder="Chhai">
+                                    <label for="userFirstName">User Name</label><br>
+                                    <input class="form-control" id="userFirstName" type="text" name="userName"
+                                    value="<?php echo $username; ?>">
                                   </div>
-                                  <div class="col-sm-4">
-                                    <label for="userLastName">Last Name</label><br>
-                                    <input class="form-control" id="userLastName" type="text" name="userLastName" placeholder="An">
-                                  </div>
+
                                   <div class="col-sm-4">
                                     <label for="userEmail">Email</label><br>
-                                    <input class="form-control" id="userEmail" type="email" name="userEmail" placeholder="chhaily_an@yahoo.com">
+                                    <input class="form-control" id="userEmail" type="email" name="userEmail" value="<?php echo $email; ?>">
                                   </div>
                                   <div class="col-sm-4">
                                     <label for="userTitle">Title</label><br>
@@ -63,11 +110,18 @@ include("adminHeader.php");
                                   <div class="col-sm-4">
                                     <label for="userLastName">User Level</label><br>
                                     <select class="form-control" id="userLevel" name="userLevel">
-                                      <option value="1">1</option>
-                                      <option value="2">2</option>
-                                      <option value="3">3</option>
-                                      <option value="4">4</option>
-                                      <option value="5">5</option>
+                                      <?php
+                                        echo "<option selected='selected' value='$userlevel'>".$userlevel."</option>";
+                                        if ($userlevel == 5){
+                                          echo "<option value='0'>0</option>";
+                                        }
+                                        else {
+                                          echo "<option value='5'>5</option>";
+                                        }
+
+
+                                      ?>
+
                                     </select>
                                   </div>
                                   <div class="col-sm-4">
@@ -84,7 +138,7 @@ include("adminHeader.php");
                               <fieldset class="mt-3">
 
                                   <label for="userBio">Biography </label><br>
-                                  <textarea class="form-control"></textarea>
+                                  <textarea class="form-control" name="userBio"></textarea>
 
                               </fieldset>
                               <button type="submit" class="btn btn-primary my-2" name="submit">Submit</button>
