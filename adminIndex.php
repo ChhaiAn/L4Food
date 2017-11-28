@@ -26,7 +26,7 @@ if(!$result) {
                             </a>
 
 
-                            <a href="#" class="list-group-item list-group-item-action"><span><i class="fa fa-user" aria-hidden="true"></i>
+                            <a href="view-user.php" class="list-group-item list-group-item-action"><span><i class="fa fa-user" aria-hidden="true"></i>
                             </span>Users &amp; Privileges</a>
                             <a href="#" class="list-group-item list-group-item-action">Morbi leo risus</a>
                             <a href="#" class="list-group-item list-group-item-action">Porta ac consectetur ac</a>

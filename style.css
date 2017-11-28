@@ -101,7 +101,7 @@ div.container-fluid {
         margin-left: 50px;
     }
     .forgetPasswordResult{
-        
+
         background-color: #F5F5F5;
         width: 500px;
         height: 275px;
@@ -109,10 +109,10 @@ div.container-fluid {
         top: 23%;
         left: 30%;
         display: none;
-        
-        
+
+
     }
-    
+
 .btn-myOutline-logIn {
     border: 1px solid #A64D1E;
     background: none;
@@ -173,7 +173,7 @@ div.container-fluid {
 
 }
 .profile-image-wrapper {
-   
+
     position: relative;
     top: -3rem;
     height: 250px;
@@ -224,7 +224,7 @@ div.container-fluid {
 .btn-upload-picture:hover {
     background-color:#CCB474;
 
-    
+
 }
 
 
@@ -258,7 +258,7 @@ div.container-fluid {
 .resetPassword {
     margin: 10rem auto;
     width: 300px;
-    
+
 
 }
 .resetPassword h1 {
@@ -273,4 +273,16 @@ div.container-fluid {
 .my-modal-tab:visited{
     border-top: 1px solid black;
 
+}
+
+/**** FOOD CHOICE ****/
+.lg-modal {
+  max-width: 80% !important;
+}
+.my-textarea{
+  width: 65% !important;
+  height:200px;
+}
+.food-card {
+  max-width: 100%;
 }

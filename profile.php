@@ -7,7 +7,7 @@ $pictureDefault = true;
 //mysqli_connect('localhost','username','password','database_name')
 $connection = mysqli_connect("localhost", 'root' , 'root' , 'project1');
 if ($connection) {
-   
+
     $query = "SELECT * FROM `users` WHERE `userName` = '".$userName."'";
     $result = mysqli_query($connection, $query);
     while ($row = mysqli_fetch_assoc($result)) {
@@ -22,11 +22,11 @@ if ($connection) {
     }
     if ($db_picture === ""){
         $pictureDefault = 0;
-      
+
     }
 
-   
-   
+
+
 }
 else {
     die("connection failed");
@@ -66,13 +66,13 @@ else {
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                
                     <form action="index.php" method="post" class="form-inline ml-auto px-2">
                         <!-- Button trigger modal -->
                         <button type="button" class="btn btn-success " data-toggle="modal" data-target="#myModal">Edit Profile</button>
                         <!-- Modal -->
                         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
+                            <div class="modal-dialog lg-modal">
                                 <div class="modal-content">
                                     <div class="modal-header ">
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -85,75 +85,57 @@ else {
                                     <div class="modal-body">
                                         <div role="tabpanel">
                                             <!-- Nav tabs -->
-                                            <ul class="nav nav-tabs">
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a class="nav-link" href="#bioTab" aria-controls="browseTab" data-toggle="tab">Brief Bio</a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a class="nav-link" href="#foodTab" aria-controls="browseTab" data-toggle="tab">Food Choice</a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a class="nav-link" href="#browseTab" aria-controls="browseTab" data-toggle="tab">Browse</a>
-                                                </li>
-
-                                            </ul>
+                                            <nav class="nav nav-tabs" id="myTab" role="tablist">
+                                              <a class="nav-item nav-link active" id="nav-bio-tab" data-toggle="tab" href="#bioTab" role="tab" aria-controls="bioTab" aria-selected="true">Bio</a>
+                                              <a class="nav-item nav-link" id="nav-food-tab" data-toggle="tab" href="#foodTab" role="tab" aria-controls="foodTab" aria-selected="false">Food Choice</a>
+                                              <a class="nav-item nav-link" id="nav-pic-tab" data-toggle="tab" href="#picTab" role="tab" aria-controls="picTab" aria-selected="false">Upload Picture</a>
+                                            </nav>
                                             <!-- Tab panes -->
                                             <div class="tab-content">
                                                 <div role="tabpanel" class="tab-pane active" id="bioTab">
                                                     <h4 class="text-center">Your Brief Bio </h4>
-                                                    <form class="form-group" action="" method="post">
+                                                    <form class="form-group " action="" method="post">
                                                         <div class="form-group">
-                                                            <textarea class="form-control my-textarea" id="exampleFormControlTextarea1" rows="5"></textarea>
+                                                            <textarea class="form-control my-textarea mx-auto" id="exampleFormControlTextarea1" rows="5"></textarea>
                                                         </div>
                                                     </form>
-
                                                 </div><!--BIO TABS-->
                                                 <div role="tabpanel" class="tab-pane" id="foodTab">
-                                                    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
-                                                        <div class="carousel-inner">
-                                                            <div class="carousel-item active">
-                                                            <div class="row">
-                                                                <div class="col-sm-6">
-                                                                    <div class="card">
-                                                                    <div class="card-body">
-                                                                        <h4 class="card-title">Special title treatment</h4>
-                                                                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                                                                    </div>
-                                                                    </div>
-                                                                </div>
-                                                            <div class="col-sm-6">
-                                                                <div class="card">
-                                                                <div class="card-body">
-                                                                    <h4 class="card-title">Special title treatment</h4>
-                                                                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                                                                    <a href="#" class="btn btn-primary">Go somewhere</a>
-                                                                </div>
-                                                                </div>
-                                                            </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="carousel-item">
-                                                            <img class="d-block w-100" src="..." alt="Second slide">
-                                                        </div>
-                                                        <div class="carousel-item">
-                                                            <img class="d-block w-100" src="..." alt="Third slide">
-                                                        </div>
+                                                  <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                                                    <ol class="carousel-indicators">
+                                                      <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                                                      <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                                                      <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                                                    </ol>
+                                                    <div class="carousel-inner">
+                                                      <div class="carousel-item active">
+                                                        <img class="d-block w-100" src="..." alt="First slide">
+                                                      </div>
+                                                      <div class="carousel-item">
+                                                        <img class="d-block w-100" src="..." alt="Second slide">
+                                                      </div>
+                                                      <div class="carousel-item">
+                                                        <img class="d-block w-100" src="..." alt="Third slide">
+                                                      </div>
                                                     </div>
-                                                    <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-                                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                                        <span class="sr-only">Previous</span>
+                                                    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                                                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                      <span class="sr-only">Previous</span>
                                                     </a>
-                                                    <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-                                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                                        <span class="sr-only">Next</span>
+                                                    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                                                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                      <span class="sr-only">Next</span>
                                                     </a>
-                                                    </div>
+                                                  </div><!--carousel-->
+                                                </div><!--FOOD TAB-->
+                                                <div role="tabpanel" class="tab-pane" id="picTab">
+                                                  <h4 class="text-center">Your Brief Bio </h4>
 
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                              </div><!--BIO TABS-->
+                                            </div><!--TAB CONTENT-->
+                                      </div><!--TAB PANEL-->
+
+                                    </div><!--MODAL BODY-->
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                         <button type="button" class="btn btn-primary save">Save changes</button>
@@ -162,12 +144,12 @@ else {
                             </div>
                         </div>
 
-
+                      </div>
                         <button class="btn btn-myOutline-logOut mx-1 my-1" method="post" name="logOut" type="submit">Log Out</button>
                 </div>
             </div>
 
-            <?php 
+            <?php
         if (isset($_POST['logOut'])) {
           session_destroy();
       }
@@ -183,7 +165,7 @@ else {
         <div class="profile-background">
             <div class="container">
 
-                <?php 
+                <?php
     $now = getdate();
 
     if ($now['hours'] < 11) {
@@ -200,21 +182,21 @@ else {
                 <?php echo "<span class='display-1'>".$userName."</span>";?>
 
                 <div id="profile-image-wrapper-id" class="container profile-image-wrapper text-center">
-                    <img id="default-profile-image" src="<?php 
+                    <img id="default-profile-image" src="<?php
     if ($pictureDefault == false) {
-       
+
         if ($db_gender == " female ") {
             echo 'images/icon/userProfile/girl.svg';
         } else {
             echo 'images/icon/userProfile/boy.svg';
         }
-         
+
     }  else {
         echo "uploads/ ".strtolower($userName).'/userprofile/'.$db_picture;
-            
-    
+
+
     }
-    
+
     ?>" alt="" class="profile-image">
                     <button id="upload-picture" type="button" class="btn btn-lg btn-upload-picture" data-toggle="modal" data-target="#exampleModal">
                     Edit Profile Picture
