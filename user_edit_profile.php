@@ -43,12 +43,70 @@ if(isset($_POST['submit'])) {
     header("Location: user_edit_profile.php?user_id=$userid");
     exit();
   }
-  else {
-    header("Location: index1.php");
-    exit();
-  }
+  
 }
 
+// UPLOAD PIC TO DATABASE 
+if(isset($_POST['imageUpload'])){
+  
+// Desired folder structure
+$structure = 'uploads/'.strtolower($username).'/userprofile/';
+
+$tmp_file = $_FILES['the_file']['tmp_name'];
+// Make folder
+mkdir($structure, 0777, true);
+   
+$image = ($_FILES['the_file']['name']);
+
+$image = mysqli_real_escape_string($connection,$image);
+
+//Store image name inside database
+ $query = "UPDATE `USER_REGISTRATION` SET `profile_image` = '$image' WHERE `user_id` = \"$userid\"";
+$result = mysqli_query($connection, $query);
+if(!$result) {
+  echo mysqli_error($connection);
+} 
+$tmp_file = $_FILES['the_file']['tmp_name'];
+
+
+
+     // Try to move the uploaded file:
+        if (move_uploaded_file ($tmp_file, $structure.$image)) {
+
+         
+            print '<p class="profile-conf">Your file has been uploaded.</p>';
+        
+        } else { // Problem!
+    
+            print '<p style="color: red;">Your file could not be uploaded because: ';
+            
+            // Print a message based upon the error:
+            switch ($_FILES['the_file']['error']) {
+                case 1:
+                    print 'The file exceeds the upload_max_filesize setting in php.ini';
+                    break;
+                case 2:
+                    print 'The file exceeds the MAX_FILE_SIZE setting in the HTML form';
+                    break;
+                case 3:
+                    print 'The file was only partially uploaded';
+                    break;
+                case 4:
+                    print 'No file was uploaded';
+                    break;
+                case 6:
+                    print 'The temporary folder does not exist.';
+                    break;
+                default:
+                    print 'Something unforeseen happened.';
+                    break;
+            }
+            
+            print '.</p>'; // Complete the paragraph.
+    
+        } // End of move_uploaded_file() IF.
+        //header("Location: profile.php");
+    } // End of submission IF.
 
 
 
@@ -83,10 +141,10 @@ if(isset($_POST['submit'])) {
                             </a>
                           <img class="mt-3" src="images/icon/userProfile/boy.svg" width ="200" height ="200">
                           <div class="container">
-                            <form action="upload.php" method="post" enctype="multipart/form-data">
+                            <form action="user_edit_profile.php?user_id=<?php echo $userid; ?>" method="post" enctype="multipart/form-data">
                               Select image to upload:
-                              <input type="file" name="fileToUpload" id="fileToUpload">
-                              <input type="submit" value="Upload Image" name="submit">
+                              <input type="file" name="the_file" id="fileToUpload">
+                              <input type="submit" value="upload Image" name="imageUpload">
                             </form>
                           </div>
                           <form class="mt-3" action="" method="post">
@@ -103,10 +161,7 @@ if(isset($_POST['submit'])) {
                                     <label for="userEmail">Email</label><br>
                                     <input class="form-control" id="userEmail" type="email" name="userEmail" value="<?php echo $email; ?>">
                                   </div>
-                                  <div class="col-sm-4">
-                                    <label for="userTitle">Title</label><br>
-                                    <input class="form-control" id="userTiile" type="text" name="userTitle" placeholder="BOSS">
-                                  </div>
+                                  
                                   <div class="col-sm-4">
                                     <label for="userLastName">User Level</label><br>
                                     <select class="form-control" id="userLevel" name="userLevel">
