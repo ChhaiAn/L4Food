@@ -1,424 +1,331 @@
-<?php session_start(); ob_start(); date_default_timezone_set('America/Los_Angeles');?>
-<?php
+<?php  
+session_start();
+date_default_timezone_set('America/Los_Angeles');
 $userName = $_SESSION['username'];
-$pictureDefault = true;
-
 
 //mysqli_connect('localhost','username','password','database_name')
 $connection = mysqli_connect("localhost", 'root' , 'root' , 'project1');
 if ($connection) {
-
+   
     $query = "SELECT * FROM `users` WHERE `userName` = '".$userName."'";
     $result = mysqli_query($connection, $query);
     while ($row = mysqli_fetch_assoc($result)) {
         $db_gender = $row['gender'];
-        $db_email = $row['email'];
-        $_SESSION['email'] = $db_email;
-        $db_id = $row['id'];
-        $_SESSION['id']=$db_id;
-        $db_picture =$row['picture'];
-        $db_userName = $row['username'];
-        $_SESSION['username']=$db_userName;
+   	$db_email = $row['email'];
     }
-    if ($db_picture === ""){
-        $pictureDefault = 0;
-
-    }
-
-
-
+   
 }
 else {
     die("connection failed");
 
 
 }
+/*******************************************************upload pic******************/
+if ($_SERVER['REQUEST_METHOD'] == 'POST') { // Handle the form.
+    
+        // Try to move the uploaded file:
+        if (move_uploaded_file ($_FILES['the_file']['tmp_name'], "uploads/{$_FILES['the_file']['name']}")) {
 
+            //email confirmation for profile
+            $body = "Thank you, ".$username." This is a confirmation that we have successfully uploaded your profile picture!!";
+            
+            mail($db_email, 'Profile Picture Confirmation',
+            $body, 'From: lee.supermonkey@gmail.com');        
+            print '<p class="profile-conf">Your file has been uploaded.</p>';
+        
+        } else { // Problem!
+    
+            print '<p style="color: red;">Your file could not be uploaded because: ';
+            
+            // Print a message based upon the error:
+            switch ($_FILES['the_file']['error']) {
+                case 1:
+                    print 'The file exceeds the upload_max_filesize setting in php.ini';
+                    break;
+                case 2:
+                    print 'The file exceeds the MAX_FILE_SIZE setting in the HTML form';
+                    break;
+                case 3:
+                    print 'The file was only partially uploaded';
+                    break;
+                case 4:
+                    print 'No file was uploaded';
+                    break;
+                case 6:
+                    print 'The temporary folder does not exist.';
+                    break;
+                default:
+                    print 'Something unforeseen happened.';
+                    break;
+            }
+            
+            print '.</p>'; // Complete the paragraph.
+    
+        } // End of move_uploaded_file() IF.
+        
+    } // End of submission IF.
+        
+     // End of submission IF.
+    
+    // Leave PHP and display the form:
 
+        if(isset($_POST['upload'])) {
+            $image = file_get_contents($_FILES['the_file']['tmp_name']);
+            $image = mysqli_real_escape_string($connection,$image);
+       
+            $query = "UPDATE `users` SET `picture` = '$image' WHERE `id` = \"$db_id\"";
+            $result = mysqli_query($connection, $query);
+     
+            if(!$result) {
+                echo mysqli_error($connection);
+            }
+        }
    ?>
 
-    <!DOCTYPE html>
-    <html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
-            crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
-            crossorigin="anonymous">
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
-            crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="style.css">
-        <title>Profile Page</title>
-    </head>
+<!--
+$file = $_FILES['image']['tmp_name'];
 
-    <body>
+
+if(!isset($file)){
+    echo "Please select an image.";
+}
+    else {
+       echo  $image = file_get_contents($_FILES['image']['tmp_name']);
+    }
+   
+   $errors= array();
+   $file_name = $_FILES['image']['name'];
+   $file_size =$_FILES['image']['size'];
+   $file_tmp =$_FILES['image']['tmp_name'];
+   $file_type=$_FILES['image']['type'];
+   $file_ext=strtolower(end(explode('.',$_FILES['image']['name'])));
+   $expensions= array("jpeg","jpg","png"); 
+   if(in_array($file_ext,$expensions)=== false){
+      $errors[]="extension not allowed, please choose a JPEG or PNG file.";
+   }
+   
+   if($file_size > 2097152){
+      $errors[]='File size must be excately 2 MB';
+   }
+   
+   if(empty($errors)==true){
+    $query = "INSERT INTO users (picture) VALUES ('$file_name')";
+    $result = mysqli_query($connection, $query);
+      
+   }else{
+      print_r($errors);
+   }
+-->
+
+
+    
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>Profile Page</title>
+</head>
+<body>
         <nav class="navbar navbar-expand-md navbar-light bg-light">
-            <div class="container">
-                <a class="navbar-brand" href="#">
-                    <img class="user-default" src="images/icon/logo.png" width="100" height="100" alt="">
-                </a>
-                <button class="navbar-toggler mr-3" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+                <div class="container">
+                    <a class="navbar-brand" href="#">
+                        <img class="user-default" src="images/icon/logo.png" width="100" height="100" alt="">
+                      </a>
+                <button class="navbar-toggler mr-3" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
                 </button>
-
-                
-                    <form action="index.php" method="post" class="form-inline ml-auto px-2">
-                        <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-success " data-toggle="modal" data-target="#myModal">Edit Profile</button>
-                        <!-- Modal -->
-                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                            <div class="modal-dialog lg-modal">
-                                <div class="modal-content">
-                                    <div class="modal-header ">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-
-                                        </button>
-                                        <h4 class="modal-title m-auto" id="myModalLabel">Edit Your Profile</h4>
-
+             
+                <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                  <form action="index.php" method="post" class="form-inline ml-auto px-2">
+                          
+                            <fieldset class="text-center">
+                                <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+                                <button class="btn btn-outline-success mr-2 my-2 my-sm-0" type="submit">Search</button>
+                            </fieldset>
+                          
+                      
+                      <button class="btn btn-myOutline-logOut mx-1 my-1" method="post" name = "logOut" type="submit">Log Out</button>
                                     </div>
-                                    <div class="modal-body">
-                                        <div role="tabpanel">
-                                            <!-- Nav tabs -->
-                                            <nav class="nav nav-tabs" id="myTab" role="tablist">
-                                              <a class="nav-item nav-link active" id="nav-bio-tab" data-toggle="tab" href="#bioTab" role="tab" aria-controls="bioTab" aria-selected="true">Bio</a>
-                                              <a class="nav-item nav-link" id="nav-food-tab" data-toggle="tab" href="#foodTab" role="tab" aria-controls="foodTab" aria-selected="false">Food Choice</a>
-                                              <a class="nav-item nav-link" id="nav-pic-tab" data-toggle="tab" href="#picTab" role="tab" aria-controls="picTab" aria-selected="false">Upload Picture</a>
-                                            </nav>
-                                            <!-- Tab panes -->
-                                            <div class="tab-content">
-                                                <div role="tabpanel" class="tab-pane active" id="bioTab">
-                                                    <h4 class="text-center">Your Brief Bio </h4>
-                                                    <form class="form-group " action="" method="post">
-                                                        <div class="form-group">
-                                                            <textarea class="form-control my-textarea mx-auto" id="exampleFormControlTextarea1" rows="5"></textarea>
-                                                        </div>
-                                                    </form>
-                                                </div><!--BIO TABS-->
-                                                <div role="tabpanel" class="tab-pane" id="foodTab">
-                                                  <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-                                                    <ol class="carousel-indicators">
-                                                      <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                                                      <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                                                      <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-                                                    </ol>
-                                                    <div class="carousel-inner">
-                                                      <div class="carousel-item active">
-                                                        <img class="d-block w-100" src="..." alt="First slide">
-                                                      </div>
-                                                      <div class="carousel-item">
-                                                        <img class="d-block w-100" src="..." alt="Second slide">
-                                                      </div>
-                                                      <div class="carousel-item">
-                                                        <img class="d-block w-100" src="..." alt="Third slide">
-                                                      </div>
-                                                    </div>
-                                                    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                                                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                                      <span class="sr-only">Previous</span>
-                                                    </a>
-                                                    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                                                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                                      <span class="sr-only">Next</span>
-                                                    </a>
-                                                  </div><!--carousel-->
-                                                </div><!--FOOD TAB-->
-                                                <div role="tabpanel" class="tab-pane" id="picTab">
-                                                  <h4 class="text-center">Your Brief Bio </h4>
-
-                                              </div><!--BIO TABS-->
-                                            </div><!--TAB CONTENT-->
-                                      </div><!--TAB PANEL-->
-
-                                    </div><!--MODAL BODY-->
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-primary save">Save changes</button>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
 
-                      </div>
-                        <button class="btn btn-myOutline-logOut mx-1 my-1" method="post" name="logOut" type="submit">Log Out</button>
+                      <?php 
+                        if (isset($_POST['logOut'])) {
+                          session_destroy();
+                      }
+                      ?>
+                   
+                   
+                  </form>
+                </div>                
                 </div>
-            </div>
-
-            <?php
-        if (isset($_POST['logOut'])) {
-          session_destroy();
-      }
-      ?>
-
-
-            </form>
-            </div>
-            </div>
-            </div>
-        </nav>
+              </div>
+              </nav>
 
         <div class="profile-background">
             <div class="container">
-
-                <?php
-    $now = getdate();
-
-    if ($now['hours'] < 11) {
-        echo "<h1> Good Morning, </h1>";
-    }
-    else if ($now['hours'] < 17){
-        echo "<h1> Good Afternoon, </h1>";
-    }
-    else {
-        echo "<h1> Good Evening, </h1>";
-    }
-
-?>
-                <?php echo "<span class='display-1'>".$userName."</span>";?>
-
-                <div id="profile-image-wrapper-id" class="container profile-image-wrapper text-center">
-                    <img id="default-profile-image" src="<?php
-    if ($pictureDefault == false) {
-
-        if ($db_gender == " female ") {
-            echo 'images/icon/userProfile/girl.svg';
-        } else {
-            echo 'images/icon/userProfile/boy.svg';
-        }
-
-    }  else {
-        echo "uploads/ ".strtolower($userName).'/userprofile/'.$db_picture;
-
-
-    }
-
-    ?>" alt="" class="profile-image">
-                    <button id="upload-picture" type="button" class="btn btn-lg btn-upload-picture" data-toggle="modal" data-target="#exampleModal">
-                    Edit Profile Picture
-                    </button>
-                </div>
-            </div>
-
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-4 col-center">
-                        <div class="input-group">
-                            <span class="input-group-btn">
-                                <button class="btn btn-secondary" type="button">SEARCH!</button>
-                            </span>
-                            <input type="text" class="form-control" placeholder="Search for..." aria-label="Search for...">
-                        </div>
-                    </div>
-                </div>
-                <!--Profile Background -->
-            </div>
-
-            <!--*****************************************************************************************************************************-->
-
-
-
-
-            <!-- ***************************************** Modal-UPLOAD-PROF-PIC ******************************************************** -->
-
-            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-
-                        <div class="modal-header my-modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Profile Picture</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-
-                        <div class="modal-body">
-                            <form action="profile.php" enctype="multipart/form-data" method="post">
-                                <p>Selec a picture:</p>
-                                <input type="hidden" name="MAX_FILE_SIZE" value="300000">
-                                <p>
-                                    <input class="" type="file" name="the_file">
-                                </p>
-                                <p>
-                                    <input class="" type="submit" id="modalUpload" name="upload" value="Upload my picture!">
-                                </p>
-                            </form>
-                        </div>
-
-                        <div class="modal-footer my-modal-footer">
-                            <button type="button" class="btn btn-secondary btn-modal-close" data-dismiss="modal">Close</button>
-
-                        </div>
-                    </div>
-                    <!--MODAL CONTENT-->
-                </div>
-                <!--MODAL DIALOG-->
-            </div>
-            <!--MODAL END-->
-
-            <!--*****************************************************************************************************************************-->
-
-
-
-
-
-
-
-            <section class="friend-suggestion">
-                <h1 class="text-center">People you might want to know</h1>
-                <div class="container">
-                    <div class="row ">
-                        <div class="col-lg">
-                            <div class="pic-suggestion-box">
-
-                            </div>
-                        </div>
-                        <div class="col-lg ">
-                            <div class="pic-suggestion-box">
-
-                            </div>
-                        </div>
-                        <div class="col-lg ">
-                            <div class="pic-suggestion-box">
-
-                            </div>
-                        </div>
-                        <div class="col-lg ">
-                            <div class="pic-suggestion-box">
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <section class="food-suggestion">
-                <h1 class="text-center">People you might want to know</h1>
-                <div class="container">
-                    <div class="row ">
-                        <div class="col-lg">
-                            <div class="pic-suggestion-box">
-
-                            </div>
-                        </div>
-                        <div class="col-lg ">
-                            <div class="pic-suggestion-box">
-
-                            </div>
-                        </div>
-                        <div class="col-lg ">
-                            <div class="pic-suggestion-box">
-
-                            </div>
-                        </div>
-                        <div class="col-lg ">
-                            <div class="pic-suggestion-box">
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-
-            <footer>
-                <div class="text-center myFooter ">
-                    <p>&copy; L4Food 2017</p>
-                </div>
-            </footer>
-            <footer>
-                <div class="text-center myFooter ">
-                    <p>&copy; L4Food 2017</p>
-                </div>
-            </footer>
-
-            <script>
-                $(document).ready(function () {
-                    var uploadPic = document.getElementById("profile-image-wrapper-id");
-                    var uploadPicButton = document.getElementById("upload-picture");
-
-                    uploadPic.addEventListener('mouseover', function () {
-                        uploadPicButton.style.display = "block";
-
-                    });
-                    uploadPic.addEventListener('mouseleave', function () {
-                        uploadPicButton.style.display = "none";
-
-                    });
-                    var gender = "<?php echo $db_gender; ?>";
-
-                    var defautlPicture = "<?php echo $pictureDefault; ?>";
-
-                    if (defautlPicture == 0) {
-
-                        if (gender == "female") {
-
-                            $('#default-profile-image').attr("src", "images/icon/userProfile/girl.svg");
-
-                        }
-
-                    } else {
-                        $('#default-profile-image').attr("src", "uploads/<?php echo $userName." / userprofile / ".$db_picture ?>");
-
+                
+                <?php 
+                    $now = getdate();
+      
+                    if ($now['hours'] < 11) {
+                        echo "<h1> Good Morning, </h1>";
                     }
-                    $('#modalUpload').click(function (e) {
+                    else if ($now['hours'] < 17){
+                        echo "<h1> Good Afternoon, </h1>";
+                    }
+                    else {
+                        echo "<h1> Good Evening, </h1>";
+                    }
+               
+                ?>
+                <?php echo "<span class='display-1'>".$userName."</span>";?>
+           
+                    <div id="profile-image-wrapper-id" class="container profile-image-wrapper">
+                        <img id="default-profile-image" src="images/icon/userProfile/boy.svg" alt="" class="profile-image">
+                        <button type="submit" class="myBtn"><span><img src="images/icon/edit.svg" alt=""></span></button> 
+                        <button id="upload-picture" type="button" class="btn btn-lg btn-upload-picture" data-toggle="modal" data-target="#exampleModal"> Edit Profile Picture
+                        </button>
+                    </div>   
+            </div>
+        </div><!--Profile Background -->
+        
+        <!--*****************************************************************************************************************************-->
+        
+        
+        
+        
+        <!-- ***************************************** Modal-UPLOAD-PROF-PIC ******************************************************** -->
+        
+         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+             <div class="modal-dialog" role="document">
+                 <div class="modal-content">
+                   
+                    <div class="modal-header my-modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Profile Picture</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                         <form action="#" enctype="multipart/form-data" method="post">
+                             <p>Selec a picture:</p>
+                                <input type="hidden" name="MAX_FILE_SIZE" value="300000">
+                                <p><input class="" type="file" name="the_file"></p>
+                                <p><input class="" type="submit" name="upload" value="Upload my picture!"></p>
+                         </form>
+                    </div>
+                                       
+                     <div class="modal-footer my-modal-footer">
+                         <button type="button" class="btn btn-secondary btn-myOutline-logOut" data-dismiss="modal">Close</button>
+                                            
+                     </div>
+                </div> <!--MODAL CONTENT-->
+            </div> <!--MODAL DIALOG-->   
+        </div><!--MODAL END-->
+
+    <!--*****************************************************************************************************************************-->
 
 
-                        var search = "<?php echo $db_email; ?>";
-                        var picturePath = $('#the_file').val();
-
-
-                        var index = picturePath.lastIndexOf("/") + 1;
-                        alert(index);
-                        var filename = picturePath.substr(index);
-                        alert(filename);
-
-                        alert(search);
-
-                        e.preventDefault();
-                        $.ajax({
-
-                            datatype: 'JSON',
-                            async: false,
-                            url: 'changeProfilePicture.php',
-                            data: {
-                                search: search,
-                                picture: picture
-                            },
-                            type: 'POST',
-                            success: function (result) {
-                                try {
-                                    response = JSON.parse(result);
-                                    user = response.user;
-                                    pictureName = response.picture;
-                                    alert(pictureName);
-                                    var src = " src='uploads/" + user + "/userprofile/" + pictureName + "'>";
-                                    $('#default-profile-image').attr("src", src);
-
-
-                                }
-                                catch (e) {
-
-                                    alert("something wrong");
-                                }
-                            },
-                            error: function (jqXHR, exception) {
-                                alert(error);
-                            }
-
-                        });//ajax
-
-                    });//click modal
 
 
 
 
-                });//document ready
 
-            </script>
-    </body>
+        <section class="friend-suggestion">
+            <h1 class="text-center">People you might want to know</h1>
+            <div class="container">
+                <div class="row ">
+                    <div class="col-lg">
+                        <div class="pic-suggestion-box">
 
-    </html>
+                        </div>
+                    </div>
+                    <div class="col-lg ">
+                        <div class="pic-suggestion-box">
+                                    
+                        </div>
+                    </div>
+                    <div class="col-lg ">
+                        <div class="pic-suggestion-box">
+                                    
+                        </div>
+                    </div>
+                    <div class="col-lg ">
+                            <div class="pic-suggestion-box">
+                                        
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </section>
+        <section class="food-suggestion">
+                <h1 class="text-center">People you might want to know</h1>
+                <div class="container">
+                    <div class="row ">
+                        <div class="col-lg">
+                            <div class="pic-suggestion-box">
+    
+                            </div>
+                        </div>
+                        <div class="col-lg ">
+                            <div class="pic-suggestion-box">
+                                        
+                            </div>
+                        </div>
+                        <div class="col-lg ">
+                            <div class="pic-suggestion-box">
+                                        
+                            </div>
+                        </div>
+                        <div class="col-lg ">
+                                <div class="pic-suggestion-box">
+                                            
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </section>
+
+
+<footer>
+    <div class="text-center myFooter ">
+        <p>&copy; L4Food 2017</p>
+    </div>
+</footer>
+
+<script>
+    var gender = " male";
+    var profilePic = document.getElementById("default-profile-image");
+   
+    if (gender === ' female') {
+       
+           profilePic.setAttribute("src","images/icon/userProfile/girl.svg");
+    }
+
+    var uploadPic = document.getElementById("profile-image-wrapper-id");
+    var uploadPicButton = document.getElementById("upload-picture");
+   
+    uploadPic.addEventListener('mouseover', function () {
+        uploadPicButton.style.display="block";
+        profilePic.style.opacity =".5";
+        });
+    uploadPic.addEventListener('mouseleave', function () {
+           uploadPicButton.style.display="none";
+           profilePic.style.opacity ="1";
+        });
+
+</script>
+</body>
+</html>

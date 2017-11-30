@@ -15,15 +15,15 @@
          $forgetEmail = $_POST['search'];
          $forgetEmail = mysqli_real_escape_string($connection, $forgetEmail);
         
-         $query = "SELECT * FROM users WHERE email = '$forgetEmail'";
+         $query = "SELECT * FROM USER_REGISTRATION WHERE email = '$forgetEmail'";
          $result = mysqli_query($connection,$query);
          $a = mysqli_fetch_array($result);
          
          $db['user'] = $a['username'];
          $db['email'] = $a['email'];
-         $db['picture'] = $a['picture'];
-         $db['secuQuestion'] = $a['secuQuestion'];
-         $db['secuAnswer'] = $a['secuAnswer'];
+         $db['picture'] = $a['profile_image'];
+         $db['secuQuestion'] = $a['secure_question'];
+         $db['secuAnswer'] = $a['secure_answer'];
          $db['password'] = $a['password'];
         if ($db['email'] !== $forgetEmail) {
             echo "Bad Json";

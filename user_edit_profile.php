@@ -74,7 +74,7 @@ $tmp_file = $_FILES['the_file']['tmp_name'];
         if (move_uploaded_file ($tmp_file, $structure.$image)) {
 
          
-            print '<p class="profile-conf">Your file has been uploaded.</p>';
+            print '<p class="text-center ">Your file has been uploaded.</p>';
         
         } else { // Problem!
     
@@ -119,7 +119,7 @@ $tmp_file = $_FILES['the_file']['tmp_name'];
               <div class="col-sm-2 my-aside">
                     <div class="list-group ">
                             <a href="#" class="list-group-item list-group-item-action active bg-info text-center">
-                              Welcome, <?php echo $username; ?>
+                              Welcome, <?php echo $_SESSION['username'] ?>
                             </a>
 
 
