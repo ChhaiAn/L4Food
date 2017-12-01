@@ -1,6 +1,7 @@
-<?php
+<?php session_start();
 $connection = mysqli_connect("localhost", 'root' , 'root' , 'project1');
-
+$_SESSION['id']  = $_GET['id'];
+$id = $_SESSION['id'] ;
     if ($connection) {
        
     }
@@ -9,8 +10,40 @@ $connection = mysqli_connect("localhost", 'root' , 'root' , 'project1');
     }
 
 
-    if(isset($_POST["answer"])) {
+   
+ 
+    if(isset($_POST['submit'])){
+        $update_pass = $_POST['conPassword'];
+     
+       
+        $update_pass = mysqli_escape_string($connection, $update_pass);
+        $hashedPassword = password_hash("$update_pass" , PASSWORD_DEFAULT);
 
+        $query = "UPDATE USER_REGISTRATION SET 
+                    password =  '$hashedPassword'
+                    WHERE user_id ='$id'";
+       $result = mysqli_query($connection,$query);
+       if (!$result){
+            echo "query error";
+
+       }
+       
+       $query1 = "SELECT email,username FROM USER_REGISTRATION WHERE user_id ='$id'";
+       $result = mysqli_query($connection,$query1);
+
+       if (!$result){
+        echo "query error";
+
+      }
+      else {
+          $a = mysqli_fetch_array($result);
+         
+      }
+      
+      $body = "Hello,".$a['username']."Here is your new password.";
+      $body = $body. "echo <p> Your password is ".$update_pass ;
+      mail($a['email'], 'Password Reset',
+      $body, 'From: lee.supermonkey@gmail.com');
     }
 
 ?>
@@ -43,7 +76,7 @@ $connection = mysqli_connect("localhost", 'root' , 'root' , 'project1');
     <div class="darkOverlay">
         <div class="container">
             
-                    <form action="resetPassword.php" class="myForm p-4 resetPassword" method="post">
+                    <form action=<?php echo "resetPassword.php?id=$id"; ?> class="myForm p-4 resetPassword" method="post">
                         <h1>Reset Password</h1>
                         <p>Don't get hangry, go ahead and reset! </p>
                             <fieldset class="form-group">
@@ -101,7 +134,7 @@ $connection = mysqli_connect("localhost", 'root' , 'root' , 'project1');
         $('#confirmNewPassword').keyup(function (){
             var confirmNewPassword = this.value;
             
-            if (newPassword != confirmNewPassword) {
+            if (newPassword != confirmNewPassword && newPassword != "") {
                 $("#resetPasswordMsg").addClass("alert alert-danger");
                 $("#resetPasswordMsg").removeClass("alert alert-success");
                 $("#resetPasswordMsg").html("Passwords do not match!");
@@ -117,12 +150,12 @@ $connection = mysqli_connect("localhost", 'root' , 'root' , 'project1');
         $("#confirmNewPassword").focusout( function(){
         
             confirmNewPassword = $('#confirmNewPassword').val();
-            if (newPassword != confirmNewPassword) {
+            if (newPassword != confirmNewPassword && newPassword != "") {
                 $("#resetPasswordMsg").addClass("alert alert-danger");
                 $("#resetPasswordMsg").removeClass("alert alert-success");
                 $("#resetPasswordMsg").html("Passwords do not match!");
                 $('#reset').prop("disabled", true);
-            } else {
+            } else if (newPassword == confirmNewPassword && newPassword != "") {
                 $("#resetPasswordMsg").addClass("alert alert-success");
                 $("#resetPasswordMsg").removeClass("alert alert-danger");
                 $("#resetPasswordMsg").html("Good to go!");
@@ -130,56 +163,6 @@ $connection = mysqli_connect("localhost", 'root' , 'root' , 'project1');
             }
         
         });
-
-
-    //     $('#reset').prop("disabled", true);
-      
-       
-    //     $('#reset').click ( function () {
-          
-    //         alert("oh Yeah");
-
-     
-
-    //     });//reset click function
-    //     $("#newPassword").focusout( function(){
-    //         newPassword = $('#newPassword').keyup();
-            
-    //         if (confirmNewPassword !== ""){
-    //             if ( newPassword !== confirmNewPassword) {
-    //                     $("#resetPasswordMsg").addClass("alert alert-danger");
-    //                     $("#resetPasswordMsg").removeClass("alert alert-success");
-    //                     $("#resetPasswordMsg").html("Passwords do not match!");
-                       
-    //                 }
-    //                 else {
-    //                     $("#resetPasswordMsg").addClass("alert alert-success");
-    //                     $("#resetPasswordMsg").removeClass("alert alert-danger");
-    //                     $("#resetPasswordMsg").html("Good to go!");
-                        
-    //                 }
-    //         }
-    //     });//newpassword focusout
-    //     $("#confirmNewPassword").focusout( function(){
-            
-    //         confirmNewPassword = $('#confirmNewPassword').keyup();
-     
-    //             if ( newPassword !== confirmNewPassword) {
-    //                 $("#resetPasswordMsg").addClass("alert alert-danger");
-    //                 $("#resetPasswordMsg").removeClass("alert alert-success");
-    //                 $("#resetPasswordMsg").html("Passwords do not match!");
-    //             }
-    //             else {
-    //                 $("#resetPasswordMsg").addClass("alert alert-success");
-    //                 $("#resetPasswordMsg").removeClass("alert alert-danger");
-    //                 $("#resetPasswordMsg").html("Good to go!");
-                    
-    //             }
-            
-    //     });//confirmnewpassword focusout   
-    //    if (newPassword === confirmNewPassword && newPassword != "")  {
-    //     $('#reset').prop("disabled", false);
-    //    }
     });//document ready
   
 

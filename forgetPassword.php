@@ -25,6 +25,7 @@
          $db['secuQuestion'] = $a['secure_question'];
          $db['secuAnswer'] = $a['secure_answer'];
          $db['password'] = $a['password'];
+         $db['id'] = $a['user_id'];
         if ($db['email'] !== $forgetEmail) {
             echo "Bad Json";
         } else{

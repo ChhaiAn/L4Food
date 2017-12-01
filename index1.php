@@ -614,6 +614,7 @@ if(isset($_POST['isMe'])){
     $(document).ready(function () {
 
         var secuAnswer = '';
+       var id ='';
         $('#forgetSearch').click(function (e) {
             e.preventDefault();
             var search = $('#forgetEmailInput').val().toLowerCase();
@@ -622,10 +623,10 @@ if(isset($_POST['isMe'])){
             } else {
         var secret='';
         var user = '';
-        var email = '';
+       
         var pictureName='';
         var secuQuestion = '';
-   
+        var email = '';
         var response='';
             $.ajax({
                 datatype: 'JSON',
@@ -644,6 +645,7 @@ if(isset($_POST['isMe'])){
                         pictureName = response.picture;
                         secuQuestion = response.secuQuestion;
                         secuAnswer = response.secuAnswer;
+                        id = response.id;
                         var src = " src='uploads/"+user+"/userprofile/"+pictureName+"'>";
                         var message =  "<p class='alert alert-success'>Account Found</p>";
                             message += "<img class='forgetPasswordUserPic'"+src ;
@@ -668,13 +670,16 @@ if(isset($_POST['isMe'])){
     $('#validate').click(function (e) {
         e.preventDefault();
         var answer = $('#secuAnswer').val().toLowerCase();
-
+        
         if (answer === secuAnswer) {
-            $.post('resetPassword.php' , {answer: answer}, function(data) {
-                window.location.href = "resetPassword.php";
+           
+            $.post("resetPassword.php", { id: id }, function(data){
+                window.location.replace("resetPassword.php?id="+id);
             });
 
-        } else {
+            }
+
+         else {
             alert("Your answer is not correct!");
         }
 
