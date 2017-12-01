@@ -76,11 +76,26 @@ $connection = mysqli_connect("localhost", 'root' , 'root' , 'project1');
         var length = 0;
         $('#reset').prop("disabled", true);
 
-        $("#newPassword").focusout( function(){
+        $("#newPassword").keyup(function () {
         
             newPassword = $('#newPassword').val();
+            if (newPassword != confirmNewPassword) {
+                $("#resetPasswordMsg").addClass("alert alert-danger");
+                $("#resetPasswordMsg").removeClass("alert alert-success");
+                $("#resetPasswordMsg").html("Passwords do not match!");
+                $('#reset').prop("disabled", true);
+            } else {
+                $("#resetPasswordMsg").addClass("alert alert-success");
+                $("#resetPasswordMsg").removeClass("alert alert-danger");
+                $("#resetPasswordMsg").html("Good to go!");
+                $('#reset').prop("disabled", false);
+            }
+            
+            
         
         });
+
+        
      
        
         $('#confirmNewPassword').keyup(function (){
@@ -98,6 +113,22 @@ $connection = mysqli_connect("localhost", 'root' , 'root' , 'project1');
                 $('#reset').prop("disabled", false);
             }
             
+        });
+        $("#confirmNewPassword").focusout( function(){
+        
+            confirmNewPassword = $('#confirmNewPassword').val();
+            if (newPassword != confirmNewPassword) {
+                $("#resetPasswordMsg").addClass("alert alert-danger");
+                $("#resetPasswordMsg").removeClass("alert alert-success");
+                $("#resetPasswordMsg").html("Passwords do not match!");
+                $('#reset').prop("disabled", true);
+            } else {
+                $("#resetPasswordMsg").addClass("alert alert-success");
+                $("#resetPasswordMsg").removeClass("alert alert-danger");
+                $("#resetPasswordMsg").html("Good to go!");
+                $('#reset').prop("disabled", false);
+            }
+        
         });
 
 

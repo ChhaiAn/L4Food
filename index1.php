@@ -620,7 +620,7 @@ if(isset($_POST['isMe'])){
             if (search === "") {
                 $('#1').html("<p class='alert alert-warning'>Please Enter Your Email Address!</p>");
             } else {
-
+        var secret='';
         var user = '';
         var email = '';
         var pictureName='';
@@ -631,7 +631,10 @@ if(isset($_POST['isMe'])){
                 datatype: 'JSON',
                 async: false,
                 url: 'forgetPassword.php',
-                data: {search: search},
+                data: {
+                    search: search,
+                    secret: search
+                    },
                 type: 'POST',
                 success: function(result) {
                     try {

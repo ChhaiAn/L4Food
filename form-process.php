@@ -68,10 +68,6 @@ $flag = true;
         header("Location: profile.php");
 
 
-
-
-
-
         /*KILL QUERY*/
         if(!$result) {
             die('Query FAILED!');

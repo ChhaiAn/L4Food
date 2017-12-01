@@ -11,11 +11,17 @@ if (!$result){
 }
 $row = mysqli_fetch_assoc($result);
 
+$pictureDefault = true;
 $username = $row['username'];
 $email = $row['email'];
 $userlevel = $row['user_level'];
 $active = $row['active'];
 $userid = $row['user_id'];
+$usergender= $row['gender'];
+$userpicture = $row['profile_image'];
+if ($userpicture == ""){
+  $pictureDefault = false;
+}
 
 //UPDATE THE DATABASE
 
@@ -52,6 +58,8 @@ if(isset($_POST['imageUpload'])){
 // Desired folder structure
 $structure = 'uploads/'.strtolower($username).'/userprofile/';
 
+
+
 $tmp_file = $_FILES['the_file']['tmp_name'];
 // Make folder
 mkdir($structure, 0777, true);
@@ -61,8 +69,13 @@ $image = ($_FILES['the_file']['name']);
 $image = mysqli_real_escape_string($connection,$image);
 
 //Store image name inside database
- $query = "UPDATE `USER_REGISTRATION` SET `profile_image` = '$image' WHERE `user_id` = \"$userid\"";
+if($_FILES['the_file']['size'] == 0) {
+  header('Location: '.$_SERVER['REQUEST_URI']);
+  } 
+  else {
+$query = "UPDATE `USER_REGISTRATION` SET `profile_image` = '$image' WHERE `user_id` = \"$userid\"";
 $result = mysqli_query($connection, $query);
+
 if(!$result) {
   echo mysqli_error($connection);
 } 
@@ -105,9 +118,14 @@ $tmp_file = $_FILES['the_file']['tmp_name'];
             print '.</p>'; // Complete the paragraph.
     
         } // End of move_uploaded_file() IF.
+        
+
+ header('Location: '.$_SERVER['REQUEST_URI']);
+ 
+ 
         //header("Location: profile.php");
     } // End of submission IF.
-
+  }
 
 
 ?>
@@ -139,7 +157,26 @@ $tmp_file = $_FILES['the_file']['tmp_name'];
                             <a href="#" class="list-group-item list-group-item-action active bg-danger text-center">
                                 USER EDIT
                             </a>
-                          <img class="mt-3" src="images/icon/userProfile/boy.svg" width ="200" height ="200">
+                          
+                          <div id="profile-image-wrapper-id" class="container profile-image-wrapper p-5">
+                        <img id="default-profile-image" width ="200" height ="200" src="<?php 
+                    if ($pictureDefault == false) {
+                       
+                        if ($usergender == "female") {
+                            echo 'images/icon/userProfile/girl.svg';
+                        } else {
+                            echo 'images/icon/userProfile/boy.svg';
+                        }
+                         
+                    }  else {
+                        echo "uploads/".strtolower($username).'/userprofile/'.$userpicture;
+                       
+                    
+                    }
+                    
+                    ?>" alt="" class="profile-image">
+                       
+                    </div> 
                           <div class="container">
                             <form action="user_edit_profile.php?user_id=<?php echo $userid; ?>" method="post" enctype="multipart/form-data">
                               Select image to upload:

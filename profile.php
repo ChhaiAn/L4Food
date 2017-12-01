@@ -1,18 +1,29 @@
-<?php  
-session_start();
-date_default_timezone_set('America/Los_Angeles');
+<?php session_start(); ob_start(); date_default_timezone_set('America/Los_Angeles');?>
+<?php
 $userName = $_SESSION['username'];
+$pictureDefault = true;
+
 
 //mysqli_connect('localhost','username','password','database_name')
+//$connection = mysqli_connect("localhost", 'team2cos' , '#Lbcc2017' , 'team2cos_l4f');
 $connection = mysqli_connect("localhost", 'root' , 'root' , 'project1');
 if ($connection) {
    
-    $query = "SELECT * FROM `users` WHERE `userName` = '".$userName."'";
+    $query = "SELECT * FROM `USER_REGISTRATION` WHERE `userName` = '".$userName."'";
     $result = mysqli_query($connection, $query);
     while ($row = mysqli_fetch_assoc($result)) {
         $db_gender = $row['gender'];
-   	$db_email = $row['email'];
+        $db_email = $row['email'];
+        $db_id = $row['user_id'];
+        $db_picture =$row['profile_image'];
+  
+      
     }
+    if ($db_picture == ""){
+        $pictureDefault = false;
+    }
+
+   
    
 }
 else {
@@ -21,13 +32,34 @@ else {
 
 }
 /*******************************************************upload pic******************/
-if ($_SERVER['REQUEST_METHOD'] == 'POST') { // Handle the form.
+if (isset($_POST['upload'])) { // Handle the form.
     
-        // Try to move the uploaded file:
-        if (move_uploaded_file ($_FILES['the_file']['tmp_name'], "uploads/{$_FILES['the_file']['name']}")) {
+  
+// Desired folder structure
+$structure = 'uploads/'.strtolower($userName).'/userprofile/';
+
+$tmp_file = $_FILES['the_file']['tmp_name'];
+// Make folder
+mkdir($structure, 0777, true);
+   
+$image = ($_FILES['the_file']['name']);
+
+$image = mysqli_real_escape_string($connection,$image);
+
+//Store image name inside database
+$query = "UPDATE `USER_REGISTRATION` SET `profile_image` = '$image' WHERE `user_id` = \"$db_id\"";
+$result = mysqli_query($connection, $query);
+$tmp_file = $_FILES['the_file']['tmp_name'];
+
+
+if(!$result) {
+    echo mysqli_error($connection);
+} 
+     // Try to move the uploaded file:
+        if (move_uploaded_file ($tmp_file, $structure.$image)) {
 
             //email confirmation for profile
-            $body = "Thank you, ".$username." This is a confirmation that we have successfully uploaded your profile picture!!";
+            $body = "Thank you, ".$userName." This is a confirmation that we have successfully uploaded your profile picture!!";
             
             mail($db_email, 'Profile Picture Confirmation',
             $body, 'From: lee.supermonkey@gmail.com');        
@@ -62,26 +94,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') { // Handle the form.
             print '.</p>'; // Complete the paragraph.
     
         } // End of move_uploaded_file() IF.
-        
+        header("Location: profile.php");
     } // End of submission IF.
         
      // End of submission IF.
     
     // Leave PHP and display the form:
 
-        if(isset($_POST['upload'])) {
-            $image = file_get_contents($_FILES['the_file']['tmp_name']);
-            $image = mysqli_real_escape_string($connection,$image);
-       
-            $query = "UPDATE `users` SET `picture` = '$image' WHERE `id` = \"$db_id\"";
-            $result = mysqli_query($connection, $query);
-     
-            if(!$result) {
-                echo mysqli_error($connection);
-            }
-        }
    ?>
-
 
 <!--
 $file = $_FILES['image']['tmp_name'];
@@ -191,12 +211,27 @@ if(!isset($file)){
                 ?>
                 <?php echo "<span class='display-1'>".$userName."</span>";?>
            
-                    <div id="profile-image-wrapper-id" class="container profile-image-wrapper">
-                        <img id="default-profile-image" src="images/icon/userProfile/boy.svg" alt="" class="profile-image">
-                        <button type="submit" class="myBtn"><span><img src="images/icon/edit.svg" alt=""></span></button> 
-                        <button id="upload-picture" type="button" class="btn btn-lg btn-upload-picture" data-toggle="modal" data-target="#exampleModal"> Edit Profile Picture
-                        </button>
-                    </div>   
+                <div id="profile-image-wrapper-id" class="container profile-image-wrapper text-center">
+                <img id="default-profile-image" src="<?php 
+            if ($pictureDefault == false) {
+               
+                if ($db_gender == "female") {
+                    echo 'images/icon/userProfile/girl.svg';
+                } else {
+                    echo 'images/icon/userProfile/boy.svg';
+                }
+                 
+            }  else {
+                echo "uploads/".strtolower($userName).'/userprofile/'.$db_picture;
+                    
+            
+            }
+            
+            ?>" alt="" class="profile-image">
+                <button id="upload-picture" type="button" class="btn btn-lg btn-upload-picture" data-toggle="modal" data-target="#exampleModal"> Edit Profile Picture
+                </button>
+            </div>   
+    </div>
             </div>
         </div><!--Profile Background -->
         
