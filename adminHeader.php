@@ -51,7 +51,7 @@
                         </div>
                       </li>
             </ul>
-            <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Log Out</button>
+            <a class="btn btn-outline-danger my-2 my-sm-0" href="index1.php">Log Out</a>
           </form>
         </div>
       </nav>
