@@ -1,4 +1,10 @@
-<?php session_start(); ob_start();?>
+<?php
+session_start();
+ob_start();
+include('cdb.php');
+
+
+?>
 <?php
 $hashedPassword = '';
 $flag = true;
@@ -9,14 +15,7 @@ $usernameExist = false;
 $accountFound = false;
 $isMe = false;
 $userLevel;
-   $connection = mysqli_connect("localhost", 'root' , 'root' , 'project1');
-
-    if ($connection) {
-
-    }
-    else {
-        die ("connection failed");
-    }
+  
 
 
 
@@ -623,7 +622,7 @@ if(isset($_POST['isMe'])){
             } else {
         var secret='';
         var user = '';
-       
+
         var pictureName='';
         var secuQuestion = '';
         var email = '';
@@ -670,9 +669,9 @@ if(isset($_POST['isMe'])){
     $('#validate').click(function (e) {
         e.preventDefault();
         var answer = $('#secuAnswer').val().toLowerCase();
-        
+
         if (answer === secuAnswer) {
-           
+
             $.post("resetPassword.php", { id: id }, function(data){
                 window.location.replace("resetPassword.php?id="+id);
             });

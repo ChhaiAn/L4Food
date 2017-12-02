@@ -1,24 +1,19 @@
-<?php 
- $connection = mysqli_connect("localhost", 'root' , 'root' , 'project1');
+<?php
+include("cdb.php");
  $db_question = '';
 
-     if ($connection) {
-        
-     }
-     else {
-         die ("connection failed");
-     }
+
 
 
 
      if(isset($_POST['search'])){
          $forgetEmail = $_POST['search'];
          $forgetEmail = mysqli_real_escape_string($connection, $forgetEmail);
-        
+
          $query = "SELECT * FROM USER_REGISTRATION WHERE email = '$forgetEmail'";
          $result = mysqli_query($connection,$query);
          $a = mysqli_fetch_array($result);
-         
+
          $db['user'] = $a['username'];
          $db['email'] = $a['email'];
          $db['picture'] = $a['profile_image'];
@@ -31,12 +26,12 @@
         } else{
             echo json_encode($db);
         }
-        
-        
+
+
     }
 
     if(isset($POST['answer'])) {
-        
+
         header("Location: resetPassword.php");
 
 
@@ -44,11 +39,11 @@
         // $body = $body. "<p> Your password is ".$db['password']."</p>" ;
         // mail($email, 'Account Password Request',
         // $body, 'From: lee.supermonkey@gmail.com');
-        
+
     }
-   
-   
-   
-    
+
+
+
+
 
 ?>

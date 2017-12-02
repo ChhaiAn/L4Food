@@ -1,5 +1,5 @@
 <?php
-$connection = mysqli_connect("localhost", 'root' , 'root' , 'project1');
+$connection = mysqli_connect("localhost", 'root' , 'root' , 'l4food');
 
  if ($connection) {
 
